@@ -9,81 +9,56 @@ module sub_bytes (data_in, data_out, ready, rst, clk);
   output reg ready;
   
   reg [127:0] temp_data;
-  reg [7:0] sbox_s;
-  wire [7:0] sbox_o;
+  
+  reg [7:0] sbox_s1;
+  wire [7:0] sbox_o1;
+  reg [7:0] sbox_s2;
+  wire [7:0] sbox_o2;
+  reg [7:0] sbox_s3;
+  wire [7:0] sbox_o3;
+  reg [7:0] sbox_s4;
+  wire [7:0] sbox_o4;
+  
   reg [127:0] temp_o;
   reg [127:0] ready_out;
   reg flag;
   reg [3:0] cnt;
   
-  sbox SB1 (.select (sbox_s), .s_out (sbox_o), .clk (clk)); 
+  sbox SB1 (.select (sbox_s1), .s_out (sbox_o1), .clk (clk));
+  sbox SB2 (.select (sbox_s2), .s_out (sbox_o2), .clk (clk));
+  sbox SB3 (.select (sbox_s3), .s_out (sbox_o3), .clk (clk));
+  sbox SB4 (.select (sbox_s4), .s_out (sbox_o4), .clk (clk));
   
   always @* begin
   
       temp_data = data_in;
       //$display ("Cnt= 0x%0h", cnt);
       if (cnt == 0) begin
-   	    sbox_s[7:0] = temp_data[7:0];
+   	    sbox_s1[7:0] = temp_data[7:0];
+        sbox_s2[7:0] = temp_data[15:8];
+        sbox_s3[7:0] = temp_data[23:16];
+        sbox_s4[7:0] = temp_data[31:24];
       end
   		
       if (cnt == 1) begin
-    		sbox_s[7:0] = temp_data[15:8];
+    		sbox_s1[7:0] = temp_data[39:32];
+       	sbox_s2[7:0] = temp_data[47:40];
+        sbox_s3[7:0] = temp_data[55:48];
+        sbox_s4[7:0] = temp_data[63:56];
   	  end
       	
       if (cnt == 2) begin
-	      sbox_s[7:0] = temp_data[23:16];
+	      sbox_s1[7:0] = temp_data[71:64];
+        sbox_s2[7:0] = temp_data[79:72];
+        sbox_s3[7:0] = temp_data[87:80];
+        sbox_s4[7:0] = temp_data[95:88];
   	  end	
      
       if (cnt == 3) begin
-  		  sbox_s[7:0] = temp_data[31:24];
-      end
-      
-      if (cnt == 4) begin
-   	    sbox_s[7:0] = temp_data[39:32];
-      end
-  		
-      if (cnt == 5) begin
-    		sbox_s[7:0] = temp_data[47:40];
-  	  end
-      	
-      if (cnt == 6) begin
-	      sbox_s[7:0] = temp_data[55:48];
-  	  end	
-     
-      if (cnt == 7) begin
-  		  sbox_s[7:0] = temp_data[63:56];
-      end
-      
-      if (cnt == 8) begin
-   	    sbox_s[7:0] = temp_data[71:64];
-      end
-  		
-      if (cnt == 9) begin
-    		sbox_s[7:0] = temp_data[79:72];
-  	  end
-      	
-      if (cnt == 10) begin
-	      sbox_s[7:0] = temp_data[87:80];
-  	  end	
-     
-      if (cnt == 11) begin
-  		  sbox_s[7:0] = temp_data[95:88];
-      end
-      
-      if (cnt == 12) begin
-   	    sbox_s[7:0] = temp_data[103:96];
-      end
-  		
-      if (cnt == 13) begin
-    		sbox_s[7:0] = temp_data[111:104];
-  	  end
-      	
-      if (cnt == 14) begin
-	      sbox_s[7:0] = temp_data[119:112];
-  	  end	
-     
-      if (cnt == 15) begin
-  		  sbox_s[7:0] = temp_data[127:120];
+  		  sbox_s1[7:0] = temp_data[103:96];
+        sbox_s2[7:0] = temp_data[111:104];
+        sbox_s3[7:0] = temp_data[119:112];
+        sbox_s4[7:0] = temp_data[127:120];
       end
       
       if(flag == 1) begin
@@ -102,71 +77,34 @@ module sub_bytes (data_in, data_out, ready, rst, clk);
     end
       else begin
         if (cnt == 0) begin
-		      temp_o[7:0] <= sbox_o[7:0];
+		      temp_o[7:0] <= sbox_o1[7:0];
+          temp_o[15:8] <= sbox_o2[7:0];
+          temp_o[23:16] <= sbox_o3[7:0];
+          temp_o[31:24] <= sbox_o4[7:0];
         end
 		
         if (cnt == 1) begin
-		      temp_o[15:8] <= sbox_o[7:0];
+		      temp_o[39:32] <= sbox_o1[7:0];
+          temp_o[47:40] <= sbox_o2[7:0];      
+          temp_o[55:48] <= sbox_o3[7:0];      
+          temp_o[63:56] <= sbox_o4[7:0];      
 	      end
     	
         if (cnt == 2) begin
-		      temp_o[23:16] <= sbox_o[7:0];
+		      temp_o[71:64] <= sbox_o1[7:0];
+          temp_o[79:72] <= sbox_o2[7:0];
+          temp_o[87:80] <= sbox_o3[7:0];
+          temp_o[95:88] <= sbox_o4[7:0];   
 	      end
              
         if (cnt == 3) begin
-		      temp_o[31:24] <= sbox_o[7:0];
-        end
-		
-        if (cnt == 4) begin
-		      temp_o[39:32] <= sbox_o[7:0];
-	      end
-    	
-        if (cnt == 5) begin
-		      temp_o[47:40] <= sbox_o[7:0];
-	      end
-             
-        if (cnt == 6) begin
-		      temp_o[55:48] <= sbox_o[7:0];
-        end
-		
-        if (cnt == 7) begin
-		      temp_o[63:56] <= sbox_o[7:0];
-	      end
-    	
-        if (cnt == 8) begin
-		      temp_o[71:64] <= sbox_o[7:0];
-	      end
-             
-        if (cnt == 9) begin
-		      temp_o[79:72] <= sbox_o[7:0];
-        end
-		
-        if (cnt == 10) begin
-		      temp_o[87:80] <= sbox_o[7:0];
-	      end
-    	
-        if (cnt == 11) begin
-		      temp_o[95:88] <= sbox_o[7:0];
-	      end
-             
-        if (cnt == 12) begin
-		      temp_o[103:96] <= sbox_o[7:0];
-	      end
-             
-        if (cnt == 13) begin
-		      temp_o[111:104] <= sbox_o[7:0];
-        end
-		
-        if (cnt == 14) begin
-		      temp_o[119:112] <= sbox_o[7:0];
-	      end
-   
-        if (cnt == 15) begin
-		      temp_o[127:120] <= sbox_o[7:0];
+		      temp_o[103:96] <= sbox_o1[7:0];
+          temp_o[111:104] <= sbox_o2[7:0];      
+          temp_o[119:112] <= sbox_o3[7:0];      
+          temp_o[127:120] <= sbox_o4[7:0];
           flag <= 1'h1;
-          ready <= 1'h1;
+          ready <= 1'h1;      
         end
-        //$display ("Rdy= 0x%0h", ready);
       cnt <= cnt + 1;
     end
   end

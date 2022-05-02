@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+//`timescale 1ns / 1ps
 
 module AES_top_tb ();
 
@@ -10,12 +10,12 @@ module AES_top_tb ();
   wire [127:0] out_data;
   wire ready;
   reg flag = 0;
-  AES_top AES1 (.data_in (data_in), .key_in (key_in), .out_data (out_data), .ready (ready), .rst (rst), .clk (clk));
+  AES_top_final AES1 (.data_in (data_in), .key_in (key_in), .out_data (out_data), .ready (ready), .rst (rst), .clk (clk));
   
   
   initial begin
     clk = 1'b0;
-    forever #1 clk = ~clk;
+    forever #7.5 clk = ~clk;
   end
   
   initial begin
